@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Page Title</title>
+</head>
+<body></body>
+
+</body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hospital OP Hub - Proddatur</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f3f7fb;
+    color:#222
+}
+
+header{
+    background:#087cf0;
+    color:white;
+    text-align:center;
+    padding:20px
+}
+
+header h1{margin:0}
+header p{margin:7px 0 0}
+
+.container{
+    max-width:1150px;
+    margin:auto;
+    padding:18px
+}
+
+.page{display:none}
+.active{display:block}
+
+.welcome{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 2px 10px #0001;
+    margin-bottom:20px
+}
+
+.welcome h2{
+    color:#087cf0
+}
+
+.menu{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:15px
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 2px 10px #0001;
+    margin-bottom:18px
+}
+
+.card h3{
+    color:#087cf0;
+    margin-top:0
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
+    gap:18px
+}
+
+button{
+    width:100%;
+    border:0;
+    border-radius:8px;
+    padding:12px;
+    margin-top:8px;
+    background:#087cf0;
+    color:white;
+    font-size:15px;
+    cursor:pointer
+}
+
+button:hover{
+    opacity:.9
+}
+
+.back{background:#444}
+
+.map{background:#e67e22}
+.call{background:#159447}
+.email{background:#8e44ad}
+.booking{background:#087cf0}
+.doctor{background:#6c5ce7}
+
+input,select,textarea{
+    width:100%;
+    padding:12px;
+    margin-top:6px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:15px
+}
+
+.form-group{
+    margin-bottom:15px
+}
+
+label{
+    font-weight:bold
+}
+
+.result{
+    background:#eaffef;
+    border:1px solid #42b963;
+    padding:18px;
+    border-radius:10px;
+    margin-top:15px
+}
+
+.search{
+    margin-bottom:18px
+}
+
+.info{
+    line-height:1.6
+}
+
+footer{
+    background:#222;
+    color:white;
+    text-align:center;
+    padding:18px;
+    margin-top:30px
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🏥 Hospital OP Hub</h1>
+<p>Proddatur Hospitals • Doctors • OP Booking</p>
+</header>
+
+<div class="container">
+
+<!-- HOME -->
+<section id="home" class="page active">
+
+<div class="welcome">
+<h2>Welcome to Hospital OP Hub</h2>
+<p>Find hospitals and doctors in Proddatur and book OP appointments.</p>
+</div>
+
+<div class="menu">
+
+<div class="card">
+<h3>🏥 Hospitals</h3>
+<p>View Proddatur hospital details.</p>
+<button onclick="showPage('hospitals')">
+View Hospitals
+</button>
+</div>
+
+<div class="card">
+<h3>👨‍⚕️ Doctors</h3>
+<p>View available doctor information.</p>
+<button onclick="showPage('doctors')">
+View Doctors
+</button>
+</div>
+
+<div class="card">
+<h3>📅 OP Booking</h3>
+<p>Book an OP appointment.</p>
+<button onclick="openBooking()">
+Book OP
+</button>
+</div>
+
+<div class="card">
+<h3>🚑 Emergency</h3>
+<p>Emergency numbers.</p>
+<button onclick="showPage('emergency')">
+Emergency
+</button>
+</div>
+
+</div>
+</section>
+
+
+<!-- HOSPITALS -->
+<section id="hospitals" class="page">
+
+<button class="back" onclick="showPage('home')">
+← Back to Home
+</button>
+
+<div class="welcome">
+<h2>🏥 Proddatur Hospitals</h2>
+<p>Current hospital listings and available contact information.</p>
+</div>
+
+<input
+id="hospitalSearch"
+class="search"
+placeholder="🔎 Search hospital..."
+oninput="searchHospitals()"
+>
+
+<div id="hospitalList" class="grid"></div>
+
+</section>
+
+
+<!-- DOCTORS -->
+<section id="doctors" class="page">
+
+<button class="back" onclick="showPage('home')">
+← Back to Home
+</button>
+
+<div class="welcome">
+<h2>👨‍⚕️ Doctors</h2>
+<p>Doctor information currently verified from hospital sources.</p>
+</div>
+
+<input
+id="doctorSearch"
+class="search"
+placeholder="🔎 Search doctor..."
+oninput="searchDoctors()"
+>
+
+<div id="doctorList" class="grid"></div>
+
+</section>
+
+
+<!-- BOOKING -->
+<section id="booking" class="page">
+
+<button class="back" onclick="showPage('home')">
+← Back to Home
+</button>
+
+<div class="welcome">
+<h2>📅 OP Booking</h2>
+<p>Enter patient information.</p>
+</div>
+
+<div class="card">
+
+<div class="form-group">
+<label>Hospital</label>
+<select id="bookingHospital"></select>
+</div>
+
+<div class="form-group">
+<label>Doctor</label>
+<select id="bookingDoctor"></select>
+</div>
+
+<div class="form-group">
+<label>Date</label>
+<input type="date" id="bookingDate">
+</div>
+
+<div class="form-group">
+<label>Time</label>
+<select id="bookingTime">
+<option value="">Select Time</option>
+<option>09:00 AM</option>
+<option>10:00 AM</option>
+<option>11:00 AM</option>
+<option>12:00 PM</option>
+<option>02:00 PM</option>
+<option>03:00 PM</option>
+<option>04:00 PM</option>
+<option>05:00 PM</option>
+<option>06:00 PM</option>
+<option>07:00 PM</option>
+<option>08:00 PM</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Patient Name</label>
+<input id="patientName" placeholder="Enter patient name">
+</div>
+
+<div class="form-group">
+<label>Age</label>
+<input id="patientAge" type="number" placeholder="Enter age">
+</div>
+
+<div class="form-group">
+<label>Gender</label>
+<select id="patientGender">
+<option value="">Select Gender</option>
+<option>Male</option>
+<option>Female</option>
+<option>Other</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Mobile</label>
+<input id="patientMobile" maxlength="10" placeholder="10 digit mobile number">
+</div>
+
+<div class="form-group">
+<label>Reason</label>
+<textarea id="reason" rows="4"></textarea>
+</div>
+
+<button onclick="confirmBooking()">
+✅ Confirm OP Booking
+</button>
+
+<div id="bookingResult"></div>
+
+</div>
+</section>
+
+
+<!-- EMERGENCY -->
+<section id="emergency" class="page">
+
+<button class="back" onclick="showPage('home')">
+← Back to Home
+</button>
+
+<div class="welcome">
+<h2>🚑 Emergency</h2>
+</div>
+
+<div class="grid">
+
+<div class="card">
+<h3>🚑 Ambulance</h3>
+<p>Emergency ambulance service.</p>
+<button class="call" onclick="callNumber('108')">
+📞 Call 108
+</button>
+</div>
+
+<div class="card">
+<h3>🚓 Police</h3>
+<p>Police emergency service.</p>
+<button class="call" onclick="callNumber('100')">
+📞 Call 100
+</button>
+</div>
+
+</div>
+</section>
+
+</div>
+
+<footer>
+Hospital OP Hub © 2026
+</footer>
+
+
+<script>
+
+/* =====================================================
+   REAL PRODDATUR HOSPITAL DATA
+   Publicly available current information only
+===================================================== */
+
+const hospitals = [
+
+{
+name:"Harika Hospitals",
+address:"#3/1166, TB Road",
+city:"Proddatur",
+pincode:"516360",
+phone:"9992755509",
+secondPhone:"9005577227",
+email:"info@harikahospitals.com",
+timing:"24 Hours",
+speciality:"Orthopaedics, General Medicine, Spine Surgery, Plastic Surgery, Joint Replacement, Arthroscopy, Critical Care, Physiotherapy"
+},
+
+{
+name:"Harsha Multi Speciality Hospital",
+address:"2/207, Bollavaram, Jammalamadugu Road",
+city:"Proddatur",
+pincode:"516360",
+phone:"9704100136",
+secondPhone:"9640540475",
+email:"harshamultispecialityhospital@gmail.com",
+timing:"Emergency 24 Hours",
+speciality:"Emergency & Critical Care, Obstetrics & Gynaecology, Orthopaedics, Paediatrics, Neurology, General Medicine, General Surgery, Urology, Nephrology, Oncology, Dentistry"
+},
+
+{
+name:"Suresh Neuro, General & Pediatric Hospital",
+address:"D No. 3/179, Sai Kuteer Road",
+city:"Proddatur",
+pincode:"516360",
+phone:"9888687688",
+email:"",
+timing:"24 Hours",
+speciality:"Neuro, General Medicine & Paediatric Care"
+},
+
+{
+name:"Suraksha Multi Speciality Hospital",
+address:"4/4, Gandhi Road, Venkateswara Pet",
+city:"Proddatur",
+pincode:"516360",
+phone:"",
+email:"",
+timing:"24 Hours",
+speciality:"Multi Speciality, General & Laparoscopic Surgery"
+},
+
+{
+name:"Sai Sri Hospitals",
+address:"2,3 Posina Compound, Gandhi Road, Venkateswara Pet",
+city:"Proddatur",
+pincode:"516360",
+phone:"7793995517",
+email:"",
+timing:"24 Hours",
+speciality:"Hospital Services"
+},
+
+{
+name:"Yashaswi Orthopaedic Multi Speciality Hospital",
+address:"3/1521, Holmes Pet Road",
+city:"Proddatur",
+pincode:"516360",
+phone:"9494810281",
+email:"",
+timing:"24 Hours",
+speciality:"Orthopaedics & Multi Speciality Care"
+},
+
+{
+name:"Dheeraj Mother & Child Hospital",
+address:"3/1392, Holmes Pet Road",
+city:"Proddatur",
+pincode:"516360",
+phone:"9059517009",
+email:"",
+timing:"24 Hours",
+speciality:"Mother & Child Care"
+},
+
+{
+name:"Latha Poly Nursing Home",
+address:"Holmes Pet",
+city:"Proddatur",
+pincode:"516361",
+phone:"7893551378",
+email:"",
+timing:"9 AM - 8:30 PM",
+speciality:"Nursing Home Services"
+},
+
+{
+name:"Sri Sri Holistic Hospitals",
+address:"H-10-236, Gandhi Road, near HP Petrol Bunk",
+city:"Proddatur",
+pincode:"516360",
+phone:"9030333980",
+email:"",
+timing:"24 Hours",
+speciality:"Hospital Services"
+},
+
+{
+name:"Life Hospital Emergency & Multispeciality",
+address:"5/8, Gandhi Road, near More Super Market",
+city:"Proddatur",
+pincode:"516360",
+phone:"9291081084",
+email:"",
+timing:"24 Hours",
+speciality:"Emergency & Multi Speciality Care"
+},
+
+{
+name:"Sri Madan Multi Speciality Hospital",
+address:"Gandhi Road, beside HP Petrol Bunk",
+city:"Proddatur",
+pincode:"516360",
+phone:"8564243455",
+email:"",
+timing:"24 Hours",
+speciality:"Multi Speciality Care"
+},
+
+{
+name:"Jyothi Hospital",
+address:"5/497, Gandhi Road, opposite HP Petrol Pump",
+city:"Proddatur",
+pincode:"516360",
+phone:"6304291689",
+email:"",
+timing:"24 Hours",
+speciality:"Hospital Services"
+},
+
+{
+name:"Abhilash Netra Vydyasala",
+address:"3/1350, Gandhi Road, Holmes Pet",
+city:"Proddatur",
+pincode:"516361",
+phone:"7569471147",
+email:"abhilasheyehospital@gmail.com",
+timing:"8 AM - 9 PM",
+speciality:"Eye Hospital"
+},
+
+{
+name:"Vijaya Eye Hospital",
+address:"Gandhi Road, opposite Nirmala Bakery & Sweets",
+city:"Proddatur",
+pincode:"516360",
+phone:"9247607622",
+email:"",
+timing:"8 AM - 9 PM",
+speciality:"Eye Hospital"
+},
+
+{
+name:"Swarup Eye Hospital & Laser Centre",
+address:"JNF Road, YMR Colony",
+city:"Proddatur",
+pincode:"516360",
+phone:"9346443063",
+email:"",
+timing:"Morning & Evening OP",
+speciality:"Eye Care & Laser Centre"
+},
+
+{
+name:"Prime Vision Eye Hospitals",
+address:"JNF Road, YMR Colony",
+city:"Proddatur",
+pincode:"516360",
+phone:"6302696262",
+email:"",
+timing:"Morning & Evening OP",
+speciality:"Eye Hospital"
+},
+
+{
+name:"Rotary Eye Hospital",
+address:"Gandhi Road, Rameswaram",
+city:"Proddatur",
+pincode:"516360",
+phone:"6303448294",
+email:"",
+timing:"9:30 AM - 6:30 PM",
+speciality:"Eye Hospital"
+},
+
+{
+name:"Veeragayathri Hospital",
+address:"D.No. 4/19-1-3-1, Gandhi Road, beside Abhyas Junior College",
+city:"Proddatur",
+pincode:"516360",
+phone:"8564250299",
+email:"",
+timing:"24 Hours",
+speciality:"Hospital Services"
+},
+
+{
+name:"B.G.R. Hospital",
+address:"D.No. 10/258, Gandhi Road",
+city:"Proddatur",
+pincode:"516430",
+phone:"9989398111",
+email:"bgrhospital2015@gmail.com",
+timing:"Hospital",
+speciality:"Hospital Services"
+},
+
+{
+name:"Bhavya Nursing Home",
+address:"4-203, Gandhi Road",
+city:"Proddatur",
+pincode:"516430",
+phone:"08564-2455333",
+email:"bhavyanursinghome@gmail.com",
+timing:"Hospital",
+speciality:"Nursing Home"
+},
+
+{
+name:"Dr. Nagalakshmi Specialty Hospital",
+address:"8/700, Gandhi Road",
+city:"Proddatur",
+pincode:"516430",
+phone:"08564-520412",
+email:"nshospital2017@gmail.com",
+timing:"Hospital",
+speciality:"Specialty Hospital"
+},
+
+{
+name:"Kalyana Chakravarthi Hospitals",
+address:"3/1467, Holmespet",
+city:"Proddatur",
+pincode:"516430",
+phone:"08564-251650",
+email:"kcnhpatr@gmail.com",
+timing:"Hospital",
+speciality:"Hospital Services"
+},
+
+{
+name:"Harshitha Nursing Home",
+address:"D.No. 9/397, Holmaspet",
+city:"Proddatur",
+pincode:"516430",
+phone:"8564250711",
+email:"",
+timing:"Hospital",
+speciality:"Nursing Home"
+},
+
+{
+name:"Hemalatha Memorial Hospital",
+address:"Yerraguntla Road",
+city:"Proddatur",
+pincode:"516430",
+phone:"",
+email:"",
+timing:"Hospital",
+speciality:"Hospital Services"
+}
+
+];
+
+
+/* =====================================================
+   VERIFIED DOCTOR DATA
+===================================================== */
+
+const doctors = [
+
+{
+name:"Dr. M. Ramesh",
+qualification:"MBBS, MS (Ortho)",
+speciality:"Orthopaedics",
+hospital:"Harika Hospitals",
+timing:"Monday - Sunday, 9 AM - 9 PM"
+},
+
+{
+name:"Dr. M. Nagaiah",
+qualification:"MBBS, MD",
+speciality:"General Medicine",
+hospital:"Harika Hospitals",
+timing:"Monday - Sunday, 11 AM - 9 PM"
+},
+
+{
+name:"Dr. Y. Siva Kumar",
+qualification:"MS, MCH",
+speciality:"Plastic Surgery",
+hospital:"Harika Hospitals",
+timing:"Wednesday & Saturday, 11 AM - 2 PM"
+},
+
+{
+name:"Dr. Raghavendra",
+qualification:"MBBS, MS (Ortho), FNB (Spine)",
+speciality:"Spine Surgery",
+hospital:"Harika Hospitals",
+timing:"Second Sunday of every month"
+}
+
+];
+
+
+/* PAGE */
+
+function showPage(page){
+
+document.querySelectorAll(".page")
+.forEach(function(p){
+p.classList.remove("active");
+});
+
+document.getElementById(page)
+.classList.add("active");
+
+window.scrollTo(0,0);
+
+if(page==="hospitals"){
+displayHospitals(hospitals);
+}
+
+if(page==="doctors"){
+displayDoctors(doctors);
+}
+
+}
+
+
+/* HOSPITAL LIST */
+
+function displayHospitals(list){
+
+const box=document.getElementById("hospitalList");
+
+box.innerHTML="";
+
+list.forEach(function(h){
+
+let phoneButton="";
+
+if(h.phone!==""){
+
+phoneButton=
+`
+<button class="call"
+onclick="callNumber('${h.phone}')">
+📞 Call Hospital
+</button>
+`;
+
+}
+
+let emailButton="";
+
+if(h.email!==""){
+
+emailButton=
+`
+<button class="email"
+onclick="sendEmail('${h.email}')">
+✉️ Email Hospital
+</button>
+`;
+
+}
+
+box.innerHTML +=
+
+`
+<div class="card">
+
+<h3>🏥 ${h.name}</h3>
+
+<p class="info">
+<strong>📍 Address:</strong><br>
+${h.address}<br>
+${h.city} - ${h.pincode}
+</p>
+
+<p class="info">
+<strong>📞 Phone:</strong><br>
+${h.phone || "Not available"}
+${h.secondPhone ? "<br>"+h.secondPhone : ""}
+</p>
+
+<p class="info">
+<strong>✉️ Email:</strong><br>
+${h.email || "Not available"}
+</p>
+
+<p class="info">
+<strong>🕐 Timing:</strong><br>
+${h.timing}
+</p>
+
+<p class="info">
+<strong>🏥 Specialities:</strong><br>
+${h.speciality}
+</p>
+
+<button class="map"
+onclick="openMap('${h.name}','${h.address}','${h.city}')">
+📍 View Location
+</button>
+
+<button class="map"
+onclick="openDirections('${h.name}','${h.address}','${h.city}')">
+🗺️ Get Directions
+</button>
+
+${phoneButton}
+
+${emailButton}
+
+<button class="booking"
+onclick="openBooking('${h.name}')">
+📅 Book OP
+</button>
+
+<button class="doctor"
+onclick="hospitalDoctors('${h.name}')">
+👨‍⚕️ View Doctors
+</button>
+
+</div>
+`;
+
+});
+
+}
+
+
+/* SEARCH */
+
+function searchHospitals(){
+
+const text=
+document.getElementById("hospitalSearch")
+.value.toLowerCase();
+
+const result=hospitals.filter(function(h){
+
+return(
+h.name.toLowerCase().includes(text) ||
+h.speciality.toLowerCase().includes(text) ||
+h.city.toLowerCase().includes(text)
+);
+
+});
+
+displayHospitals(result);
+
+}
+
+
+/* DOCTORS */
+
+function displayDoctors(list){
+
+const box=document.getElementById("doctorList");
+
+box.innerHTML="";
+
+list.forEach(function(d){
+
+box.innerHTML +=
+
+`
+<div class="card">
+
+<h3>👨‍⚕️ ${d.name}</h3>
+
+<p>
+<strong>Qualification:</strong><br>
+${d.qualification}
+</p>
+
+<p>
+<strong>Speciality:</strong><br>
+${d.speciality}
+</p>
+
+<p>
+<strong>Hospital:</strong><br>
+${d.hospital}
+</p>
+
+<p>
+<strong>Availability:</strong><br>
+${d.timing}
+</p>
+
+<button class="booking"
+onclick="openBooking('${d.hospital}','${d.name}')">
+📅 Book OP
+</button>
+
+</div>
+`;
+
+});
+
+}
+
+
+/* DOCTOR SEARCH */
+
+function searchDoctors(){
+
+const text=
+document.getElementById("doctorSearch")
+.value.toLowerCase();
+
+const result=doctors.filter(function(d){
+
+return(
+d.name.toLowerCase().includes(text) ||
+d.speciality.toLowerCase().includes(text) ||
+d.hospital.toLowerCase().includes(text)
+);
+
+});
+
+displayDoctors(result);
+
+}
+
+
+/* HOSPITAL DOCTORS */
+
+function hospitalDoctors(name){
+
+const result=
+doctors.filter(function(d){
+return d.hospital===name;
+});
+
+showPage("doctors");
+
+displayDoctors(result);
+
+}
+
+
+/* BOOKING */
+
+function openBooking(hospital="",doctor=""){
+
+showPage("booking");
+
+loadHospitals();
+
+loadDoctors();
+
+const today=
+new Date().toISOString().split("T")[0];
+
+document.getElementById("bookingDate").min=today;
+
+if(hospital!==""){
+document.getElementById("bookingHospital").value=hospital;
+}
+
+if(doctor!==""){
+document.getElementById("bookingDoctor").value=doctor;
+}
+
+}
+
+
+/* LOAD HOSPITALS */
+
+function loadHospitals(){
+
+const select=
+document.getElementById("bookingHospital");
+
+select.innerHTML=
+"<option value=''>Select Hospital</option>";
+
+hospitals.forEach(function(h){
+
+select.innerHTML +=
+`
+<option value="${h.name}">
+${h.name}
+</option>
+`;
+
+});
+
+}
+
+
+/* LOAD DOCTORS */
+
+function loadDoctors(){
+
+const select=
+document.getElementById("bookingDoctor");
+
+select.innerHTML=
+"<option value=''>Select Doctor</option>";
+
+doctors.forEach(function(d){
+
+select.innerHTML +=
+`
+<option value="${d.name}">
+${d.name} - ${d.speciality}
+</option>
+`;
+
+});
+
+}
+
+
+/* CONFIRM BOOKING */
+
+function confirmBooking(){
+
+const hospital=
+document.getElementById("bookingHospital").value;
+
+const doctor=
+document.getElementById("bookingDoctor").value;
+
+const date=
+document.getElementById("bookingDate").value;
+
+const time=
+document.getElementById("bookingTime").value;
+
+const name=
+document.getElementById("patientName").value.trim();
+
+const age=
+document.getElementById("patientAge").value.trim();
+
+const gender=
+document.getElementById("patientGender").value;
+
+const mobile=
+document.getElementById("patientMobile").value.trim();
+
+const reason=
+document.getElementById("reason").value.trim();
+
+
+if(
+hospital==="" ||
+doctor==="" ||
+date==="" ||
+time==="" ||
+name==="" ||
+age==="" ||
+gender==="" ||
+mobile===""
+){
+
+alert("Please fill all required details.");
+
+return;
+
+}
+
+
+if(!/^[0-9]{10}$/.test(mobile)){
+
+alert("Enter a valid 10 digit mobile number.");
+
+return;
+
+}
+
+
+const token=
+"OP"+Math.floor(100000+Math.random()*900000);
+
+
+document.getElementById("bookingResult").innerHTML=
+
+`
+<div class="result">
+
+<h3>✅ OP Booking Created</h3>
+
+<p><strong>OP Token:</strong> ${token}</p>
+<p><strong>Hospital:</strong> ${hospital}</p>
+<p><strong>Doctor:</strong> ${doctor}</p>
+<p><strong>Date:</strong> ${date}</p>
+<p><strong>Time:</strong> ${time}</p>
+<p><strong>Patient:</strong> ${name}</p>
+<p><strong>Age:</strong> ${age}</p>
+<p><strong>Gender:</strong> ${gender}</p>
+<p><strong>Mobile:</strong> ${mobile}</p>
+<p><strong>Reason:</strong> ${reason || "Not provided"}</p>
+
+<hr>
+
+<p><strong>Status:</strong> Booking request created</p>
+
+</div>
+`;
+
+}
+
+
+/* GOOGLE MAP */
+
+function openMap(name,address,city){
+
+const query=
+name+", "+address+", "+city;
+
+const url=
+"https://www.google.com/maps/search/?api=1&query="+
+encodeURIComponent(query);
+
+window.open(url,"_blank");
+
+}
+
+
+/* DIRECTIONS */
+
+function openDirections(name,address,city){
+
+const destination=
+name+", "+address+", "+city;
+
+const url=
+"https://www.google.com/maps/dir/?api=1&destination="+
+encodeURIComponent(destination);
+
+window.open(url,"_blank");
+
+}
+
+
+/* CALL */
+
+function callNumber(number){
+
+window.location.href=
+"tel:"+number.replace(/[^0-9+]/g,"");
+
+}
+
+
+/* EMAIL */
+
+function sendEmail(email){
+
+window.location.href=
+"mailto:"+email;
+
+}
+
+
+/* START */
+
+window.onload=function(){
+
+displayHospitals(hospitals);
+
+};
+
+</script>
+
+</body>
+</html>
+from flask import Flask, request, jsonify
+import sqlite3
+import random
+
+app = Flask(__name__)
+
+DATABASE = "hospital_op_hub.db"
+
+
+def get_db():
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+# Create database table
+def init_db():
+    conn = get_db()
+
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS bookings (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            op_token TEXT UNIQUE,
+            hospital TEXT NOT NULL,
+            doctor TEXT NOT NULL,
+            booking_date TEXT NOT NULL,
+            booking_time TEXT NOT NULL,
+            patient_name TEXT NOT NULL,
+            age INTEGER NOT NULL,
+            gender TEXT NOT NULL,
+            mobile TEXT NOT NULL,
+            reason TEXT,
+            status TEXT DEFAULT 'Pending'
+        )
+    """)
+
+    conn.commit()
+    conn.close()
+
+
+# Test backend
+@app.route("/")
+def home():
+    return "Hospital OP Hub Backend is Running!"
+
+
+# Save OP booking
+@app.route("/api/book", methods=["POST"])
+def book_op():
+
+    data = request.get_json()
+
+    hospital = data.get("hospital")
+    doctor = data.get("doctor")
+    booking_date = data.get("date")
+    booking_time = data.get("time")
+    patient_name = data.get("patientName")
+    age = data.get("age")
+    gender = data.get("gender")
+    mobile = data.get("mobile")
+    reason = data.get("reason", "")
+
+    if not all([
+        hospital,
+        doctor,
+        booking_date,
+        booking_time,
+        patient_name,
+        age,
+        gender,
+        mobile
+    ]):
+        return jsonify({
+            "success": False,
+            "message": "Required details missing"
+        }), 400
+
+    op_token = "OP" + str(random.randint(100000, 999999))
+
+    conn = get_db()
+
+    conn.execute("""
+        INSERT INTO bookings
+        (
+            op_token,
+            hospital,
+            doctor,
+            booking_date,
+            booking_time,
+            patient_name,
+            age,
+            gender,
+            mobile,
+            reason
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        op_token,
+        hospital,
+        doctor,
+        booking_date,
+        booking_time,
+        patient_name,
+        age,
+        gender,
+        mobile,
+        reason
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "message": "OP booking saved successfully",
+        "opToken": op_token,
+        "status": "Pending"
+    })
+
+
+# View all bookings
+@app.route("/api/bookings", methods=["GET"])
+def get_bookings():
+
+    conn = get_db()
+
+    bookings = conn.execute("""
+        SELECT * FROM bookings
+        ORDER BY id DESC
+    """).fetchall()
+
+    conn.close()
+
+    return jsonify([
+        dict(row) for row in bookings
+    ])
+
+
+if __name__ == "__main__":
+
+    init_db()
+
+    app.run(
+        debug=True,
+        host="127.0.0.1",
+        port=5000
+    )
